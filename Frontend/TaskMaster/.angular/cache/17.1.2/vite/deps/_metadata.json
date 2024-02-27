@@ -1,0 +1,43 @@
+{
+  "hash": "2bcc16c7",
+  "configHash": "8132c568",
+  "lockfileHash": "2f534490",
+  "browserHash": "e9b1a59d",
+  "optimized": {
+    "@angular/core": {
+      "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "dfee6cdc",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "25faef60",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "3165fd60",
+      "needsInterop": false
+    },
+    "primeng/menubar": {
+      "src": "../../../../../node_modules/primeng/fesm2022/primeng-menubar.mjs",
+      "file": "primeng_menubar.js",
+      "fileHash": "987c8866",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-BZMCTYTU": {
+      "file": "chunk-BZMCTYTU.js"
+    },
+    "chunk-YOBH5C54": {
+      "file": "chunk-YOBH5C54.js"
+    },
+    "chunk-XF3KZP6S": {
+      "file": "chunk-XF3KZP6S.js"
+    }
+  }
+}
