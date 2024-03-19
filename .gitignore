@@ -1,0 +1,39 @@
+# .gitignore
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.app
+*.exe
+*.dll
+
+# Visual Studio Code
+.vscode/
+
+# Angular
+node_modules/
+dist/
+*.log
+
+# IDE files
+.idea/
+*.suo
+*.user
+*.sln
+*.suo
+*.user
+*.userprefs
+*.vscode/
+
+# Package files
+*.nupkg
+*.pck
+*.dll
+*.zip
+*.pdb
+
+# User-specific files
+*.DS_Store
+Thumbs.db
+

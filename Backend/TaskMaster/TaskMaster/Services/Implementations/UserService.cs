@@ -53,7 +53,7 @@ public class UserService : IUserService
         {
             Console.WriteLine(exception);
             return new ResultResponseDto<UserDto>(false, exception.Message,
-                new UserDto(Guid.Empty, "", "", "", "", "", Role.Member));
+                new UserDto(Guid.Empty, "", "", "", "", "", Role.Member.ToString()));
         }
     }
 

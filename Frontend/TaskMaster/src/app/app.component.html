@@ -1,12 +1,10 @@
-<main class="h-screen grid">
-  <div class="col-auto bg-gray-500 h-auto">
+<main class="h-screen grid-flow-row bg-amber-100">
+  <div class="h-[90vh] flex items-center justify-center">
     <router-outlet />
   </div>
-  <div class=" col-span-1 bg-gray-800 float-end">
-    <p-menubar class="w-1/3">
-      <menuitem>
-        Koko
-      </menuitem>
-    </p-menubar>
+  <div class="h-[10vh] flex items-center justify-center">
+    <div class="flex-wrap">
+      <p-menubar [model]="items" class="flex items-center" />
+    </div>
   </div>
 </main>

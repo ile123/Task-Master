@@ -33,6 +33,13 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
     }
 
+    public async Task<User?> GetUserByPhoneNumber(string phoneNumber)
+    {
+        return await _dbContext
+            .Users
+            .FirstOrDefaultAsync(x => x.PhoneNumber.ToLower() == phoneNumber.ToLower());
+    }
+
     public async Task<bool> DoesAdminExist()
     {
         return await _dbContext

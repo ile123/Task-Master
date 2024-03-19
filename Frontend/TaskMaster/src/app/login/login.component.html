@@ -1,1 +1,30 @@
-<p>login works!</p>
+<p-card header="Login" class="text-center">
+    <form 
+    [formGroup]="loginForm"
+    (submit)="loginUser()"
+    class="flex flex-col gap-10 p-4 items-center">
+      <input type="email" placeholder="Enter email here...." formControlName="email" class="p-2 border rounded-md" />
+      <input type="password" placeholder="Enter password here...." formControlName="password" class="p-2 border rounded-md" />
+      <p-button label="Submit" icon="pi pi-check" iconPos="right" type="Submit" class="p-2 w-24 border rounded-md bg-blue-200 border-b-slate-500"/>
+    </form>
+</p-card>
+<p-dialog
+    class="w-11/12 md:w-2/3 lg:w-1/2 xl:w-2/5"
+    [(visible)]="visible"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+>
+    <div class="p-4 bg-red-500 text-white">
+        <h2 class="text-lg font-semibold text-center">ERROR</h2>
+    </div>
+    <div class="p-4">
+        <ul class="list-none p-0">
+          @for (error of errors; track error) {
+            <li class="mt-2 border-red-500 border p-2 rounded">{{ error }}</li>
+          } @empty {
+            No errors found
+          }
+        </ul>
+    </div>
+</p-dialog>

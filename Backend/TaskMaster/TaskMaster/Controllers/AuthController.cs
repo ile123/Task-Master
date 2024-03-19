@@ -15,17 +15,35 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [HttpGet("get-by-token")]
+    public async Task<ActionResult<ResultResponseDto<UserDto?>>> GetUserByToken()
+    {
+        var token = HttpContext.Request.Headers["Authorization"].ToString()
+            .Replace("Bearer ", "");
+        if (token == "")
+        {
+            return BadRequest(new ResultResponseDto<UserDto?>(false, "User with given JWT not found.",
+                new UserDto(Guid.Empty, "", "", "", "", "", "")));
+        }
+        var response = await _authService.GetUserByToken(token);
+        return Ok(response);
+    }
+
     [HttpPost("register")]
     public async Task<ActionResult<ResultResponseDto<string>>> Register(UserRegisterDto request)
     {
         try
         {
             var result = await _authService.Register(request);
+            if (result.Message is "Email already in use" or "Phone number already in use")
+            {
+                return BadRequest(result);
+            }
             return Ok(result);
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            return StatusCode(500, new ResultResponseDto<string>(false, "ERROR: Registration attempt failed!", ""));
+            return StatusCode(500, new ResultResponseDto<string>(false, "ERROR: Registration attempt failed!", exception.Message));
         }
     }
     
@@ -48,7 +66,6 @@ public class AuthController : ControllerBase
     [HttpPost("initialize-admin")]
     public async Task InitializeAdmin()
     {
-        //In Angular, after the app starts, send a request that will hit this endpoint
         await _authService.InitializeAdmin();
     }
 }

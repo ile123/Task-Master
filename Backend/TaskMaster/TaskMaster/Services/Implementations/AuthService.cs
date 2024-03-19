@@ -29,7 +29,11 @@ public class AuthService : IAuthService
     {
         if (await _userRepository.GetUserByEmail(registerDto.Email) is not null)
         {
-            return new ResultResponseDto<string>(false, "Email already in use!", "");
+            return new ResultResponseDto<string>(false, "ERROR: Email already in use!", "Email already in use");
+        } 
+        if (await _userRepository.GetUserByPhoneNumber(registerDto.PhoneNumber) is not null)
+        {
+            return new ResultResponseDto<string>(false, "ERROR: Phone number already in use!", "Phone number already in use");
         }
         var user = new User
         {
@@ -45,24 +49,36 @@ public class AuthService : IAuthService
         return new ResultResponseDto<string>(true, "User added successfully", "");
     }
 
-    public async Task<ResultResponseDto<string>> Login(UserAuthDto authDto)
+    public async Task<ResultResponseDto<LoginSuccessDto>> Login(UserAuthDto authDto)
     {
         var user = await _userRepository.GetUserByEmail(authDto.Email);
         if (user is null)
         {
-            return new ResultResponseDto<string>(false, "ERROR: User with given email dose not exist!", "");
+            return new ResultResponseDto<LoginSuccessDto>(false, "ERROR: User with given email dose not exist!", new LoginSuccessDto(Guid.Empty, "", Role.Member.ToString(), ""));
         }
         return !BCrypt.Net.BCrypt.Verify(authDto.Password, user.Password) 
-            ? new ResultResponseDto<string>(false, "ERROR: Given password is not the same !", "") 
-            : new ResultResponseDto<string>(true, "User authenticated successfully!", CreateToken(_mapper.Map<UserDto>(user)));
+            ? new ResultResponseDto<LoginSuccessDto>(false, "ERROR: Given password is not the same !", new LoginSuccessDto(Guid.Empty, "", Role.Member.ToString(), ""))
+            : new ResultResponseDto<LoginSuccessDto>(true, "User authenticated successfully!", new LoginSuccessDto(user.Id, user.UserName, user.Role.ToString(), CreateToken(_mapper.Map<UserDto>(user))));
+    }
+
+    public async Task<ResultResponseDto<UserDto?>> GetUserByToken(string jwtToken)
+    {
+        var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(jwtToken);
+        var nameId = decodedToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
+        if (nameId is null)
+            return new ResultResponseDto<UserDto?>(false, "NameId in JWT Token was not found.",
+                new UserDto(Guid.Empty, "", "", "", "", "", ""));
+        var user = await _userRepository.GetUserById(Guid.Parse(nameId));
+        return new ResultResponseDto<UserDto?>(true, "User retried successfully", _mapper.Map<UserDto>(user));
+
     }
 
     public string CreateToken(UserDto userDto)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
-            new Claim(ClaimTypes.Name, userDto.Username)
+            new(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
+            new(ClaimTypes.Name, userDto.Username)
         };
 
         var appSettingsToken = _configuration.GetSection("AppSettings:Token").Value;
