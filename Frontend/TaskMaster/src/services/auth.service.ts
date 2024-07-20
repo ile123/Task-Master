@@ -1,14 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import ResultResponse from '../types/ResultResponse';
 import RegistrationValues from '../types/RegistrationValues';
 import LoginValues from '../types/LoginValues';
+import { DataStorage } from './dataStorage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   url: string = 'http://localhost:5171/api/Auth';
+  dataStorage = inject(DataStorage);
+
+  constructor(private router: Router) {}
 
   async registerUser(
     values: RegistrationValues
@@ -34,7 +39,7 @@ export class AuthService {
     return data.json() ?? {};
   }
 
-  async initializeAdmin(): Promise<undefined> {
+  async initializeAdmin(): Promise<void> {
     await fetch(`${this.url}/initialize-admin`, {
       method: 'POST',
     });

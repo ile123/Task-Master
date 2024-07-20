@@ -16,15 +16,14 @@ export class HomeComponent implements OnInit, DoCheck{
   constructor(private cookieService: CookieService) {}
 
   welcomeText = "You are not logged in.";
-  token = "";
+  token = '';
   authService = inject(AuthService);
   dataStorage = inject(DataStorage);
 
   ngOnInit(): void {
     this.authService.initializeAdmin();
-    this.token = this.cookieService.get("token");
-    if(this.authService.isTokenNotExpired(this.token)) {
-      console.log("It dosent even matter how hard you try.")
+    this.token = this.cookieService.get("token") ?? '';
+    if(this.token !== '' && this.authService.isTokenNotExpired(this.token)) {
       this.authService.getUserByToken(this.token)
       .then((data) => {
         this.dataStorage.addData("userId", data?.result.userId);

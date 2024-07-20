@@ -1,4 +1,12 @@
 import {
+  animate,
+  animation,
+  style,
+  transition,
+  trigger,
+  useAnimation
+} from "./chunk-C532PLGG.js";
+import {
   BaseIcon,
   DomHandler,
   Ripple,
@@ -13,14 +21,6 @@ import {
   UniqueComponentId,
   zindexutils
 } from "./chunk-7YUXBUGO.js";
-import {
-  animate,
-  animation,
-  style,
-  transition,
-  trigger,
-  useAnimation
-} from "./chunk-C532PLGG.js";
 import {
   CommonModule,
   DOCUMENT,

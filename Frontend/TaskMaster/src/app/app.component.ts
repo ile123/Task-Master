@@ -1,11 +1,13 @@
 import { Component, DoCheck, OnInit, Signal, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { DataStorage } from '../services/dataStorage.service';
 import { take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -18,11 +20,13 @@ export class AppComponent implements OnInit {
   title = 'Task Master';
   dataChanged: Subscription;
 
-  constructor(private dataStorage: DataStorage) {
+  dataStorage = inject(DataStorage);
+
+  constructor(private router: Router, private cookies: CookieService) {
     this.dataChanged = this.dataStorage.dataChanged$().pipe(
       take(1)
     ).subscribe(() => {
-      switch(dataStorage.getData("role")) {
+      switch(this.dataStorage.getData("role")) {
         case "Member":
           this.items = this.navigationItemsByRole.member;
           break;
@@ -74,7 +78,8 @@ export class AppComponent implements OnInit {
       {
         label: 'Logout',
         icon: 'pi pi-fw pi-power-off',
-        routerLink: '/logout',
+        command: () => this.logoutUser(),
+        routerLink: '/',
       }
     ],
     admin: [
@@ -106,12 +111,23 @@ export class AppComponent implements OnInit {
       {
         label: 'Logout',
         icon: 'pi pi-fw pi-power-off',
-        routerLink: '/logout',
+        command: () => this.logoutUser(),
+        routerLink: '/',
       },
     ],
   };
 
   ngOnInit() {
     this.items = this.navigationItemsByRole.notLoggedIn;
+  }
+
+  logoutUser() {
+    localStorage.removeItem("token");
+    this.cookies.delete("token");
+    this.dataStorage.clearData("userId");
+    this.dataStorage.clearData("username");
+    this.dataStorage.clearData("role");
+    this.router.navigate(['/']);
+    location.reload();
   }
 }

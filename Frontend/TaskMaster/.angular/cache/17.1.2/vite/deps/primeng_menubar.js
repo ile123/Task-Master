@@ -1,4 +1,10 @@
 import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-VTOP247B.js";
+import "./chunk-S55XGFNE.js";
+import {
   BaseIcon,
   ConnectedOverlayScrollHandler,
   DomHandler,
@@ -13,12 +19,6 @@ import {
   UniqueComponentId,
   zindexutils
 } from "./chunk-7YUXBUGO.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-VTOP247B.js";
-import "./chunk-S55XGFNE.js";
 import {
   CommonModule,
   DOCUMENT,

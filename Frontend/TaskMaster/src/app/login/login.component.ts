@@ -50,7 +50,6 @@ export class LoginComponent {
         this.dataStorage.addData("username", data?.result.username);
         this.dataStorage.addData("role", data?.result.role);
         this.cookies.set("token", data?.result.jwtToken);
-        console.log(this.dataStorage.getData("username"));
         this.router.navigate(['/']);
       }
       });

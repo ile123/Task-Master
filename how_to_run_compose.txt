@@ -1,0 +1,1 @@
+sudo docker compose -f <name>.yml up --build
