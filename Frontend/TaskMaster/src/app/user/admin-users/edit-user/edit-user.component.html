@@ -1,0 +1,78 @@
+<p-card header="Edit User" class="text-center">
+    @if (!loading) {
+    <form
+      [formGroup]="registerForm"
+      (submit)="updateUser()"
+      class="flex flex-col gap-4 p-4 items-center"
+    >
+      <div class="flex flex-row gap-10">
+        <div class="flex flex-col gap-4">
+          <input
+            type="text"
+            placeholder="Enter full name here...."
+            formControlName="fullName"
+            class="p-2 border rounded-md"
+          />
+          <input
+            type="text"
+            placeholder="Enter username here...."
+            formControlName="username"
+            class="p-2 border rounded-md"
+          />
+        </div>
+        <div class="flex flex-col gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Enter phone number here...."
+            formControlName="phoneNumber"
+            class="p-2 border rounded-md"
+          />
+          <input
+            type="text"
+            placeholder="Enter profile URL here...."
+            formControlName="profileUrl"
+            class="p-2 border rounded-md"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col gap-4">
+        <p-button
+          [label]="buttonText"
+          [disabled]="buttonDisabled"
+          icon="pi pi-check"
+          iconPos="right"
+          type="Submit"
+          class="p-2 w-34 border rounded-md bg-blue-200 border-b-slate-500"
+        />
+        <p-button
+          label="Change Password"
+          icon="pi pi-check"
+          iconPos="right"
+          class="p-2 w-34 border rounded-md bg-red-200 border-b-red-500"
+          (onClick)="goToChangePassword()"
+        />
+      </div>
+    </form>
+    } @else {
+    <i class="pi pi-spin pi-spinner text-6xl text-sky-500 mx-3 my-3"></i>
+    }
+  </p-card>
+  <p-dialog
+    class="w-11/12 md:w-2/3 lg:w-1/2 xl:w-2/5"
+    [(visible)]="visible"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="p-4 bg-red-500 text-white">
+      <h2 class="text-lg font-semibold text-center">ERROR</h2>
+    </div>
+    <div class="p-4">
+      <ul class="list-none p-0">
+        @for (error of errors; track error) {
+        <li class="mt-2 border-red-500 border p-2 rounded">{{ error }}</li>
+        } @empty { No errors found }
+      </ul>
+    </div>
+  </p-dialog>
+  

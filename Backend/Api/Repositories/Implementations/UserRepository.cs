@@ -9,7 +9,7 @@ namespace Api.Repositories.Implementations;
 
 public class UserRepository(AppDbContext dbContext) : IUserRepository
 {
-    public async Task<IEnumerable<User>> GetAllUsers(string keyword, string sortBy, int pageNumber, int pageSize)
+    public async Task<IEnumerable<User>> GetAllUsers(string keyword, string sortBy, string sortDirection, int pageNumber, int pageSize)
     {
         var query = dbContext.Users.AsQueryable();
         if (!string.IsNullOrEmpty(keyword))
@@ -19,21 +19,26 @@ public class UserRepository(AppDbContext dbContext) : IUserRepository
                                      x.Email.Contains(keyword) ||
                                      x.PhoneNumber.Contains(keyword));
         }
+
         query = sortBy switch
         {
-            "id" => sortBy == "asc" ? query.OrderBy(u => u.Id) : query.OrderByDescending(u => u.Id),
-            "email" => sortBy == "asc" ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
-            "username" => sortBy == "asc" ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName),
-            "fullName" => sortBy == "asc" ? query.OrderBy(u => u.FullName) : query.OrderByDescending(u => u.FullName),
-            "phoneNumber" => sortBy == "asc"
+            "id" => sortDirection == "asc" ? query.OrderBy(u => u.Id) : query.OrderByDescending(u => u.Id),
+            "email" => sortDirection == "asc" ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email),
+            "username" => sortDirection == "asc" ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName),
+            "fullName" => sortDirection == "asc" ? query.OrderBy(u => u.FullName) : query.OrderByDescending(u => u.FullName),
+            "phoneNumber" => sortDirection == "asc"
                 ? query.OrderBy(u => u.PhoneNumber)
                 : query.OrderByDescending(u => u.PhoneNumber),
             _ => query
         };
+
         var users = await query
-            .Skip(pageNumber)
+            .Skip(pageNumber * pageSize)
             .Take(pageSize)
             .ToListAsync();
+        
+
+        
         return users;
     }
 
@@ -77,9 +82,17 @@ public class UserRepository(AppDbContext dbContext) : IUserRepository
 
     public async Task DeleteUser(Guid id)
     {
+        Console.WriteLine("Uslo ke");
         var userToDelete = await dbContext.Users.FindAsync(id);
         if (userToDelete == null) return;
         dbContext.Users.Remove(userToDelete);
         await dbContext.SaveChangesAsync();
+    }
+
+    public long GetTotalAmountOfUsers()
+    {
+        return dbContext
+        .Users
+        .Count();
     }
 }

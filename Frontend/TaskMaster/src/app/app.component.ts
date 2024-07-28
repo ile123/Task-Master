@@ -21,22 +21,13 @@ export class AppComponent implements OnInit {
   dataChanged: Subscription;
 
   dataStorage = inject(DataStorage);
+  authService = inject(AuthService);
 
   constructor(private router: Router, private cookies: CookieService) {
     this.dataChanged = this.dataStorage.dataChanged$().pipe(
       take(1)
     ).subscribe(() => {
-      switch(this.dataStorage.getData("role")) {
-        case "Member":
-          this.items = this.navigationItemsByRole.member;
-          break;
-        case "Admin":
-          this.items = this.navigationItemsByRole.admin;
-          break;
-        default:
-          this.items = this.navigationItemsByRole.notLoggedIn;
-          break;
-      }
+      this.setUserNavigation();
     });
   }
 
@@ -68,12 +59,12 @@ export class AppComponent implements OnInit {
       {
         label: 'Tasks',
         icon: 'pi pi-fw pi-prime',
-        routerLink: '/',
+        routerLink: '/tasks',
       },
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-id-card',
-        routerLink: '/',
+        routerLink: '/profile',
       },
       {
         label: 'Logout',
@@ -99,11 +90,6 @@ export class AppComponent implements OnInit {
         routerLink: '/admin-task',
       },
       {
-        label: 'Tags',
-        icon: 'pi pi-fw pi-tag',
-        routerLink: '/admin-tag',
-      },
-      {
         label: 'Profile',
         icon: 'pi pi-fw pi-id-card',
         routerLink: '/profile',
@@ -118,11 +104,28 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.items = this.navigationItemsByRole.notLoggedIn;
+    if(this.cookies.get("token") !== undefined && this.authService.isTokenNotExpired(this.cookies.get("token"))) {
+      this.setUserNavigation();
+    } else {
+      this.items = this.navigationItemsByRole.notLoggedIn;
+    }
+  }
+
+  setUserNavigation() {
+    switch(this.dataStorage.getData("role")) {
+      case "Member":
+        this.items = this.navigationItemsByRole.member;
+        break;
+      case "Admin":
+        this.items = this.navigationItemsByRole.admin;
+        break;
+      default:
+        this.items = this.navigationItemsByRole.notLoggedIn;
+        break;
+    }
   }
 
   logoutUser() {
-    localStorage.removeItem("token");
     this.cookies.delete("token");
     this.dataStorage.clearData("userId");
     this.dataStorage.clearData("username");

@@ -8,26 +8,21 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
-    private readonly IUserService _userService;
-
-    public UserController(IUserService userService)
-    {
-        _userService = userService;
-    }
 
     [HttpGet]
     [Authorize(Policy = "AdminRequired")]
     public async Task<ActionResult<ResultResponseDto<string>>> GetAllUsers(
         [FromQuery] string keyword = "",
-        [FromQuery] string sortBy = "",
+        [FromQuery] string sortBy = "id",
+        [FromQuery] string sortDirection = "asc",
         [FromQuery] int pageNumber = 0,
         [FromQuery] int pageSize = 10)
     {
         try
         {
-            var result = await _userService.GetAllUsers(keyword, sortBy, pageNumber, pageSize);
+            var result = await userService.GetAllUsers(keyword, sortBy, sortDirection, pageNumber, pageSize);
             return Ok(result);
         }
         catch (Exception exception)
@@ -42,23 +37,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.GetUser(id);
-            return Ok(result);
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-            return StatusCode(500, new ResultResponseDto<string>(false, exception.Message, ""));
-        }
-    }
-
-    [HttpGet("tasks/{id:guid}")]
-    [Authorize(Policy = "AnyRoleRequired")]
-    public async Task<ActionResult<ResultResponseDto<IEnumerable<TaskDto>>>> GetUserTasks(Guid id)
-    {
-        try
-        {
-            var result = await _userService.GetAllUserTasks(id);
+            var result = await userService.GetUser(id);
             return Ok(result);
         }
         catch (Exception exception)
@@ -74,7 +53,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.UpdateUser(id, userDto);
+            var result = await userService.UpdateUser(id, userDto);
             return Ok(result);
         }
         catch (Exception exception)
@@ -90,7 +69,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.UpdatePassword(id, passwordDto);
+            var result = await userService.UpdatePassword(id, passwordDto);
             return Ok(result);
         }
         catch (Exception exception)
@@ -106,7 +85,8 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.DeleteUser(id);
+            Console.WriteLine("KOKO");
+            var result = await userService.DeleteUser(id);
             return Ok(result);
         }
         catch (Exception exception)

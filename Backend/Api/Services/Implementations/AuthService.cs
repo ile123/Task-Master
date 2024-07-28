@@ -99,7 +99,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         var admin = new User
         {
             Email = "admin@gmail.com",
-            Password = BCrypt.Net.BCrypt.HashPassword("Admin123"),
+            Password = BCrypt.Net.BCrypt.HashPassword("Admin12345678"),
             UserName = "Admin123",
             FullName = "Admin Admin",
             PhoneNumber = "091-111-1111",

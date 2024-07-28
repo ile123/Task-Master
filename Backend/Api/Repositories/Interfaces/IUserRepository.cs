@@ -5,7 +5,7 @@ namespace Api.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAllUsers(string keyword, string sortBy, int pageNumber, int pageSize);
+    Task<IEnumerable<User>> GetAllUsers(string keyword, string sortBy, string sortDirection, int pageNumber, int pageSize);
     Task<User?> GetUserById(Guid id);
     Task<User?> GetUserByEmail(string email);
     Task<User?> GetUserByPhoneNumber(string phoneNumber);
@@ -13,4 +13,5 @@ public interface IUserRepository
     Task AddUser(User user);
     Task UpdateUser(User user);
     Task DeleteUser(Guid id);
+    long GetTotalAmountOfUsers();
 }

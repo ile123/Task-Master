@@ -22,8 +22,8 @@ export class HomeComponent implements OnInit, DoCheck{
 
   ngOnInit(): void {
     this.authService.initializeAdmin();
-    this.token = this.cookieService.get("token") ?? '';
-    if(this.token !== '' && this.authService.isTokenNotExpired(this.token)) {
+    this.token = this.cookieService.get("token");
+    if(this.token !== "" && this.authService.isTokenNotExpired(this.token)) {
       this.authService.getUserByToken(this.token)
       .then((data) => {
         this.dataStorage.addData("userId", data?.result.userId);
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, DoCheck{
   }
 
   ngDoCheck(): void {
-    if(!this.authService.isTokenNotExpired(this.token)) {
+    if(this.authService.isTokenNotExpired(this.token) !== undefined && !this.authService.isTokenNotExpired(this.token)) {
       this.cookieService.delete("token");
       window.location.reload();
     }

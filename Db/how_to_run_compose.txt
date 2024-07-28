@@ -1,0 +1,3 @@
+sudo docker compose up
+
+(YOU HAVE TO NAME THE FILE THE FOLLOWING SO IT WORKS -> docker-compose.yml)

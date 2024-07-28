@@ -9,26 +9,10 @@ namespace Api.Services.Implementations;
 
 public class UserService(IUserRepository userRepository, IMapper mapper) : IUserService
 {
-    public async Task<ResultResponseDto<IEnumerable<UserDto>>> GetAllUsers(string keyword, string sortBy, int pageNumber, int pageSize)
+    public async Task<ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>> GetAllUsers(string keyword, string sortBy, string sortDirection, int pageNumber, int pageSize)
     {
-        var users = await userRepository.GetAllUsers(keyword, sortBy, pageNumber, pageSize);
-        return new ResultResponseDto<IEnumerable<UserDto>>(true, "All users found!", users.Select(x => mapper.Map<UserDto>(x)).ToList());
-    }
-
-    public async Task<ResultResponseDto<IEnumerable<TaskDto>>> GetAllUserTasks(Guid id)
-    {
-        try
-        {
-            var user = await userRepository.GetUserById(id);
-            if (user is null) throw new Exception("ERROR: User with given id not found -> " + id);
-            return new ResultResponseDto<IEnumerable<TaskDto>>(true, "User tasks retrieved!",
-                user.Tasks.Select(x => mapper.Map<TaskDto>(x)).ToList());
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception);
-            return new ResultResponseDto<IEnumerable<TaskDto>>(true, exception.Message, new List<TaskDto>());
-        }
+        var users = await userRepository.GetAllUsers(keyword, sortBy, sortDirection, pageNumber, pageSize);
+        return new ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>(true, "All users found!", new PaginationDto<IEnumerable<UserDto>>(users.Select(x => mapper.Map<UserDto>(x)).ToList(), userRepository.GetTotalAmountOfUsers()));
     }
 
     public async Task<ResultResponseDto<UserDto>> GetUser(Guid id)

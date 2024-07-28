@@ -5,8 +5,7 @@ namespace Api.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<ResultResponseDto<IEnumerable<UserDto>>> GetAllUsers(string keyword, string sortBy, int pageNumber, int pageSize);
-    Task<ResultResponseDto<IEnumerable<TaskDto>>> GetAllUserTasks(Guid id);
+    Task<ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>> GetAllUsers(string keyword, string sortBy, string sortDirection, int pageNumber, int pageSize);
     Task<ResultResponseDto<UserDto>> GetUser(Guid id);
     Task<ResultResponseDto<string>> UpdateUser(Guid id, UpdateUserDto userDto);
     Task<ResultResponseDto<string>> UpdatePassword(Guid id, ChangePasswordDto changePasswordDto);

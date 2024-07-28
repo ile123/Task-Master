@@ -7,14 +7,8 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
-    private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
-    {
-        _authService = authService;
-    }
 
     [HttpGet("get-by-token")]
     public async Task<ActionResult<ResultResponseDto<UserDto?>>> GetUserByToken()
@@ -26,7 +20,7 @@ public class AuthController : ControllerBase
             return BadRequest(new ResultResponseDto<UserDto?>(false, "User with given JWT not found.",
                 new UserDto(Guid.Empty, "", "", "", "", "", "")));
         }
-        var response = await _authService.GetUserByToken(token);
+        var response = await authService.GetUserByToken(token);
         return Ok(response);
     }
 
@@ -36,7 +30,7 @@ public class AuthController : ControllerBase
         try
         {
             Console.WriteLine("Test");
-            var result = await _authService.Register(request);
+            var result = await authService.Register(request);
             if (result.Message is "Email already in use" or "Phone number already in use")
             {
                 return BadRequest(result);
@@ -54,7 +48,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var response = await _authService.Login(request);
+            var response = await authService.Login(request);
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }
@@ -68,6 +62,6 @@ public class AuthController : ControllerBase
     [HttpPost("initialize-admin")]
     public async Task InitializeAdmin()
     {
-        await _authService.InitializeAdmin();
+        await authService.InitializeAdmin();
     }
 }
