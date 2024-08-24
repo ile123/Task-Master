@@ -85,7 +85,6 @@ public class UserController(IUserService userService) : ControllerBase
     {
         try
         {
-            Console.WriteLine("KOKO");
             var result = await userService.DeleteUser(id);
             return Ok(result);
         }

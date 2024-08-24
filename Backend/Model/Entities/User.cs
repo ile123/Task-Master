@@ -19,7 +19,7 @@ public class User
     [MaxLength(255)]
     public string ProfileUrl { get; set; } = string.Empty;
 
-    public bool IsDisabled { get; set; } = false;
+    public bool IsDisabled { get; set; }
     public Role Role { get; set; } = Role.Member;
-    public IEnumerable<Task> Tasks { get; set; } = new List<Task>();
+    public List<Assignment> Assignments { get; set; } = new();
 }

@@ -34,7 +34,8 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             FullName = registerDto.FullName,
             PhoneNumber = registerDto.PhoneNumber,
             ProfileUrl = registerDto.ProfileUrl,
-            Role = Role.Member
+            Role = Role.Member,
+            Assignments = []
         };
         await userRepository.AddUser(user);
         return new ResultResponseDto<string>(true, "User added successfully", "");

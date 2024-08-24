@@ -9,6 +9,7 @@ public interface IUserRepository
     Task<User?> GetUserById(Guid id);
     Task<User?> GetUserByEmail(string email);
     Task<User?> GetUserByPhoneNumber(string phoneNumber);
+    Task<User?> GetUserByUsername(string username);
     Task<bool> DoesAdminExist();
     Task AddUser(User user);
     Task UpdateUser(User user);

@@ -29,7 +29,6 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         try
         {
-            Console.WriteLine("Test");
             var result = await authService.Register(request);
             if (result.Message is "Email already in use" or "Phone number already in use")
             {

@@ -61,6 +61,13 @@ public class UserRepository(AppDbContext dbContext) : IUserRepository
             .FirstOrDefaultAsync(x => x.PhoneNumber.ToLower() == phoneNumber.ToLower());
     }
 
+    public async Task<User?> GetUserByUsername(string username)
+    {
+        return await dbContext
+            .Users
+            .FirstOrDefaultAsync(x => x.UserName.ToLower() == username.ToLower());
+    }
+
     public async Task<bool> DoesAdminExist()
     {
         return await dbContext
@@ -82,7 +89,6 @@ public class UserRepository(AppDbContext dbContext) : IUserRepository
 
     public async Task DeleteUser(Guid id)
     {
-        Console.WriteLine("Uslo ke");
         var userToDelete = await dbContext.Users.FindAsync(id);
         if (userToDelete == null) return;
         dbContext.Users.Remove(userToDelete);
