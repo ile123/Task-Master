@@ -1,3 +1,0 @@
-dotnet ef migrations add --project Api/Api.csproj --startup-project Api/Api.csproj --context Api.Data.AppDbContext --configuration Debug <name_of_migration> --output-dir Migrations
-
-dotnet ef database update --project Api/Api.csproj --startup-project Api/Api.csproj --context Api.Data.AppDbContext --configuration Debug <name_of_migration>

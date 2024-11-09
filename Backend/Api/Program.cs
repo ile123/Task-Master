@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Api.Data;
 using Api.Repositories.Implementations;
@@ -58,6 +59,19 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    try
+    {
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

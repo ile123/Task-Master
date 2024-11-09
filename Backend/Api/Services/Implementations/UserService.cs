@@ -12,11 +12,8 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
     public async Task<ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>> GetAllUsers(string keyword, string sortBy, string sortDirection, int pageNumber, int pageSize)
     {
         var users = await userRepository.GetAllUsers(keyword, sortBy, sortDirection, pageNumber, pageSize);
-        foreach (var user in users)
-        {
-            Console.WriteLine(user.UserName);
-        }
-        return new ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>(true, "All users found!", new PaginationDto<IEnumerable<UserDto>>(users.Select(mapper.Map<UserDto>).ToList(), userRepository.GetTotalAmountOfUsers()));
+        var filteredUsers = users.Where(x => x.Email != "admin@gmail.com");
+        return new ResultResponseDto<PaginationDto<IEnumerable<UserDto>>>(true, "All users found!", new PaginationDto<IEnumerable<UserDto>>(filteredUsers.Select(mapper.Map<UserDto>).ToList(), userRepository.GetTotalAmountOfUsers()));
     }
 
     public async Task<ResultResponseDto<UserDto>> GetUser(Guid id)
@@ -25,8 +22,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper) : IUser
         {
             var user = await userRepository.GetUserById(id);
             if (user is null) throw new Exception("ERROR: User with given id not found -> " + id);
-            var userDto = mapper.Map<UserDto>(user);
-            return new ResultResponseDto<UserDto>(true, "User found successfully!", userDto);
+            return new ResultResponseDto<UserDto>(true, "User found successfully!", mapper.Map<UserDto>(user));
         }
         catch (Exception exception)
         {

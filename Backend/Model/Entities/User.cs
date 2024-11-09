@@ -21,5 +21,5 @@ public class User
 
     public bool IsDisabled { get; set; }
     public Role Role { get; set; } = Role.Member;
-    public List<Assignment> Assignments { get; set; } = new();
+    public List<Assignment> Assignments { get; set; } = [];
 }

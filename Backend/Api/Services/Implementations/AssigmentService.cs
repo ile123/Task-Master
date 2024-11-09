@@ -61,12 +61,11 @@ public class AssigmentService(IAssignmentRepository assignmentRepository, IUserR
             Priority = priority,
             Status = Status.Todo,
             DueDate = createAssigmentDto.DueDate,
-            User = user
         };
 
-        user.Assignments.Add(assignment);
+        assignment.User = user;
         
-        //await userRepository.UpdateUser(user);
+        user.Assignments.Add(assignment);
         
         await assignmentRepository.AddAssignment(assignment);
 

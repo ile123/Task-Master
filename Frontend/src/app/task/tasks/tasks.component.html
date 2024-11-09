@@ -1,0 +1,104 @@
+<p-card
+    class="w-[600px] h-[600px] overflow-hidden border border-gray-300 rounded-md"
+>
+    <div class="mb-4 flex justify-between items-center p-4">
+        <div class="flex items-center space-x-2">
+            <input
+                type="text"
+                placeholder="Search..."
+                [(ngModel)]="searchKeyword"
+                class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                (click)="getUserAssigments()"
+            >
+                Search
+            </button>
+        </div>
+    </div>
+    <div class="overflow-y-auto h-[350px]">
+        @if (!loading) {
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('title')"
+                        >
+                            Title
+                        </th>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('description')"
+                        >
+                            Description
+                        </th>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('tags')"
+                        >
+                            Tags
+                        </th>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('priority')"
+                        >
+                            Priority
+                        </th>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('status')"
+                        >
+                            Status
+                        </th>
+                        <th
+                            class="px-12 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                            (click)="sortAssigments('dueDate')"
+                        >
+                            Due Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200 text-center">
+                    @for (assigment of assigments; track assigment) {
+                        <tr (click)="viewAssigmentDetails(assigment.id)">
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.title }}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.description }}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.tags }}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.priority }}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.status }}
+                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-900">
+                                {{ assigment.dueDate }}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        } @else {
+            <i
+                class="pi pi-spin pi-spinner text-6xl text-sky-500 mx-3 my-3"
+            ></i>
+        }
+    </div>
+    <div class="p-4">
+        <p-paginator
+            (onPageChange)="onPageChange($event)"
+            [first]="currentPage"
+            [totalRecords]="totalRecords"
+            [rows]="10"
+            [showFirstLastIcon]="false"
+        >
+        </p-paginator>
+    </div>
+</p-card>

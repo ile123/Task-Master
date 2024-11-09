@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Model.Enums;
 
 namespace Model.Entities;
@@ -17,5 +18,6 @@ public class Assignment
     public Status Status { get; set; } = Status.Todo;
     public string DueDate { get; set; } = string.Empty;
     public bool IsDisabled { get; set; } = false;
-    public User? User { get; set; }
+    public Guid UserId { get; set; }
+    public User User { get; set; }
 }

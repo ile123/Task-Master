@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: taskmaster-db
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=taskmaster
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "5432"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  server:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: taskmaster-server
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5171:5171"
+  
+  client:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: taskmaster-client
+    depends_on:
+      - server
+    ports:
+      - "4200:4200"
